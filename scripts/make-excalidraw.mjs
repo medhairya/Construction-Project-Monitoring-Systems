@@ -259,7 +259,7 @@ const depts = [
 
 depts.forEach(([name, tone, desks], i) => {
   const x = 340 + i * 270;
-  const d = box({ x, y: 440, w: 240, h: 76, label: name, tone, size: 13 });
+  box({ x, y: 440, w: 240, h: 76, label: name, tone, size: 13 });
   arrow({ from: { x: cmo.x + cmo.w, y: 478 }, to: { x: x - 4, y: 478 }, dashed: true, color: "#adb5bd" });
   desks.forEach((desk, j) => {
     const isHead = desk.startsWith("✅");
