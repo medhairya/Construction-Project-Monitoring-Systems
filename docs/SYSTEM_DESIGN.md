@@ -70,37 +70,9 @@ tell, because:
 
 Five departments, nine officers in the demo, each with a defined slice of visibility.
 
-```mermaid
-flowchart TD
-    CMO["🏛️ <b>MINISTRY (CMO)</b><br/>Code: MIN<br/><i>Creates projects · decides escalations</i>"]
+![The five departments and the nine officers in the demo](diagrams/01-department-hierarchy.png)
 
-    CMO --> FIN["💰 <b>FINANCE DEPARTMENT</b><br/>Code: FIN<br/><i>Stage 2 · Stage 8</i>"]
-    CMO --> RB["🏗️ <b>ROADS &amp; BUILDINGS (PWD)</b><br/>Code: RB<br/><i>Stage 3 · 5 · 7 · 9</i>"]
-    CMO --> TND["📋 <b>TENDER CELL</b><br/>Code: TND<br/><i>Stage 4</i>"]
-    CMO --> SITE["👷 <b>SITE EXECUTION WING</b><br/>Code: SITE<br/><i>Stage 6</i>"]
-
-    FIN --> FINH["Secretary (Finance)<br/><b>Department Head</b><br/>approves / returns"]
-    FIN --> FINO["Section Officer<br/><b>Operator</b><br/>forwards between desks"]
-
-    RB --> RBH["Chief Engineer<br/><b>Department Head</b>"]
-    RB --> RBO["Deputy Engineer<br/><b>Operator</b>"]
-
-    TND --> TNDH["Tender Officer<br/><b>Department Head</b>"]
-
-    SITE --> SITEH["EE (Site Wing)<br/><b>Department Head</b><br/>approves EoT, verifies bills"]
-    SITE --> SITEE["Site Engineer<br/><b>Field</b><br/>reports, photos, bills"]
-
-    ADMIN["⚙️ <b>SUPER ADMIN</b><br/>No department<br/><i>users · SLA defaults · demo clock</i>"]
-
-    classDef ministry fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e
-    classDef dept fill:#f1f5f9,stroke:#475569,stroke-width:2px,color:#0f172a
-    classDef person fill:#ffffff,stroke:#94a3b8,color:#334155
-    classDef admin fill:#fef3c7,stroke:#b45309,color:#78350f
-    class CMO ministry
-    class FIN,RB,TND,SITE dept
-    class FINH,FINO,RBH,RBO,TNDH,SITEH,SITEE person
-    class ADMIN admin
-```
+<sub>Source: [`diagrams/01-department-hierarchy.mmd`](diagrams/01-department-hierarchy.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 **Why five departments and not a flat user list.** The whole product is about *handover
 between organisations*. A flat list of users would make "the file is with Finance"
@@ -114,29 +86,9 @@ stages, and it is the boundary beyond which desk-level detail is not shown.
 Exactly one stage is active at a time (**rule R1**). Each has an owning department and a
 default SLA in days.
 
-```mermaid
-flowchart LR
-    S1["<b>1 · Ministry Proposal</b><br/>MIN · 15d<br/><i>Project ID generated</i>"]
-    S2["<b>2 · Administrative<br/>Approval</b><br/>FIN · 21d"]
-    S3["<b>3 · Technical<br/>Sanction</b><br/>RB · 21d"]
-    S4["<b>4 · Tender</b><br/>TND · 45d"]
-    S5["<b>5 · Work Order</b><br/>RB · 7d"]
-    S6["<b>6 · Site Execution</b><br/>SITE · 180d"]
-    S7["<b>7 · Completion<br/>Report</b><br/>RB · 15d"]
-    S8["<b>8 · Final Bill</b><br/>FIN · 30d"]
-    S9["<b>9 · DLP &amp; Closure</b><br/>RB · 365d"]
+![The nine stages, their owning departments and default SLAs](diagrams/02-nine-stages.png)
 
-    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
-    S9 --> DONE(["✅ Project closed"])
-
-    S3 -.->|"<b>RETURN</b><br/>reason mandatory<br/>SLA restarts"| S2
-    S4 -.->|"RETURN"| S3
-
-    classDef stage fill:#f8fafc,stroke:#0369a1,stroke-width:2px,color:#0f172a
-    classDef done fill:#dcfce7,stroke:#15803d,color:#14532d
-    class S1,S2,S3,S4,S5,S6,S7,S8,S9 stage
-    class DONE done
-```
+<sub>Source: [`diagrams/02-nine-stages.mmd`](diagrams/02-nine-stages.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 Two kinds of movement exist, and the difference matters:
 
@@ -158,33 +110,9 @@ a stage — the loop is visible rather than hidden.
 A department is not one inbox. A file lands at a junior desk, climbs to the head for
 approval, and may be sent sideways for a parallel opinion.
 
-```mermaid
-flowchart TD
-    subgraph FIN["💰 FINANCE DEPARTMENT — the file's path inside"]
-      direction TB
-      A["📥 <b>Section Officer</b><br/>K. Patel<br/><i>receives the file</i>"]
-      B["<b>Accounts Officer</b><br/>S. Desai<br/><i>checks funds</i>"]
-      C["<b>Planning Officer</b><br/>M. Joshi<br/><i>parallel sub-task</i>"]
-      D["<b>Deputy Secretary</b><br/>P. Shah<br/><i>scrutiny</i>"]
-      E["✅ <b>Secretary (Finance)</b><br/>V. Trivedi<br/><b>only desk that can approve</b>"]
+![How a file moves between desks inside the Finance Department](diagrams/03-desk-hierarchy.png)
 
-      A -->|forward| B
-      B -->|forward| D
-      B -.->|"sub-task<br/>opened"| C
-      C -.->|"sub-task<br/>closed"| D
-      D -->|forward| E
-      E ==>|"APPROVE →<br/>Stage 3"| OUT(["file leaves<br/>the department"])
-    end
-
-    classDef entry fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    classDef desk fill:#ffffff,stroke:#94a3b8,color:#334155
-    classDef head fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#14532d
-    classDef out fill:#f1f5f9,stroke:#64748b,color:#334155
-    class A entry
-    class B,C,D desk
-    class E head
-    class OUT out
-```
+<sub>Source: [`diagrams/03-desk-hierarchy.mmd`](diagrams/03-desk-hierarchy.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 **Parallel work without parallel stages (R2).** Accounts and Planning can hold sub-tasks
 at the same time — real offices do this constantly. But the *stage* stays single. The head
@@ -258,40 +186,9 @@ of waiting three weeks. I can also reset the whole demo dataset.
 
 ### Visibility at a glance
 
-```mermaid
-flowchart LR
-    subgraph LEGEND[" "]
-      direction LR
-      M["👔 Ministry"]:::m
-      H["🧑‍💼 Dept Head"]:::h
-      O["🧑‍💻 Operator"]:::o
-      S["👷 Site Engineer"]:::s
-    end
+![What each role can see and do](diagrams/04-visibility-by-role.png)
 
-    M --> M1["every district"]
-    M --> M2["desk detail · <b>all</b> departments"]
-    M --> M3["create project"]
-    M --> M4["decide escalations"]
-
-    H --> H1["desk detail · <b>own</b> department"]
-    H --> H2["approve / return own stage"]
-    H --> H3["other depts · summary line only"]
-
-    O --> O1["forward between desks"]
-    O --> O2["open / close sub-tasks"]
-    O --> O3["<s>approve</s> refused"]
-
-    S --> S1["<b>own projects only</b>"]
-    S --> S2["reports · photos · bills · EoT"]
-    S --> S3["<s>desk movements</s> hidden"]
-
-    classDef m fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    classDef h fill:#dcfce7,stroke:#15803d,color:#14532d
-    classDef o fill:#fef3c7,stroke:#b45309,color:#78350f
-    classDef s fill:#fae8ff,stroke:#a21caf,color:#701a75
-    classDef leaf fill:#ffffff,stroke:#cbd5e1,color:#334155
-    class M1,M2,M3,M4,H1,H2,H3,O1,O2,O3,S1,S2,S3 leaf
-```
+<sub>Source: [`diagrams/04-visibility-by-role.mmd`](diagrams/04-visibility-by-role.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 ---
 
@@ -317,30 +214,9 @@ tests, and as PL/pgSQL inside Postgres — so the interface and the database can
 
 This is rule R7, and it is the feature that turns a tracker into an accountability system.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant C as ⏰ Clock<br/>(sweep / now_app)
-    participant P as 📁 Project
-    participant O as 🧑‍💼 Holding officer
-    participant M as 👔 Ministry
+![Rule R7: breach, freeze, justification, chat, decision, re-entry](diagrams/05-escalation-loop.png)
 
-    C->>P: due_at has passed
-    Note over P: stage → BREACHED<br/>project → ESCALATED<br/>🔒 movement frozen
-    P-->>O: red banner + notification
-    P-->>M: appears in escalations
-
-    O->>M: Structured justification<br/>cause · explanation · impact · fix · new ETA
-    Note over O,M: all five fields required,<br/>Zod-validated, on permanent record
-
-    M->>O: Official chat — "exact date?"
-    O->>M: reply
-    Note over M,O: append-only · timestamped · role badge<br/>❌ cannot be edited or deleted
-
-    M->>P: Structured decision<br/>type · changes ordered · reason<br/>new SLA · re-entry stage · priority
-    Note over P: status → ACTIVE<br/>priority → <b>HIGH</b><br/>new stage instance, new clock
-    P-->>O: back at the top of the inbox
-```
+<sub>Source: [`diagrams/05-escalation-loop.mmd`](diagrams/05-escalation-loop.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 **The colour rule.** Green until 75% of the SLA is used, amber from 75%, red once
 breached. Amber is the point of the whole thing: it is a warning you can still act on.
@@ -406,52 +282,9 @@ department's inbox automatically.
 
 ## 9. System architecture
 
-```mermaid
-flowchart TB
-    subgraph BROWSER["🖥️ Browser"]
-      UI["React Server Components<br/>+ small client islands<br/><i>Tailwind · shadcn-style primitives · Recharts</i>"]
-    end
+![System architecture: browser, Next.js on Vercel, Supabase](diagrams/06-system-architecture.png)
 
-    subgraph VERCEL["▲ Vercel — Next.js 16 App Router"]
-      direction TB
-      PAGES["<b>Pages</b> (server)<br/>passport · inbox · escalations<br/>execution · dashboards · admin"]
-      ACTIONS["<b>Server Actions</b><br/>Zod-validated, one per RPC"]
-      CRON["<b>/api/cron/sla</b><br/>secret-protected sweep"]
-      RBAC["<b>/lib/rbac</b> — visibility matrix<br/><b>/lib/workflow</b> — rules R1–R5 (pure)<br/><b>/lib/sla</b> · <b>/lib/execution</b> — maths"]
-    end
-
-    subgraph SUPA["🐘 Supabase"]
-      direction TB
-      RPC["<b>PL/pgSQL functions</b><br/>fn_create_project · fn_approve_stage<br/>fn_return_stage · fn_forward_file<br/>fn_sla_sweep · fn_record_decision<br/><i>the rules, again, in the database</i>"]
-      TABLES[("<b>Postgres tables</b><br/>projects · stage_instances<br/>file_movements · escalations<br/>chat · decisions · execution")]
-      GUARD["<b>Guards</b><br/>RLS policies<br/>append-only triggers (R8)<br/>now_app() demo clock"]
-      STORE["<b>Storage</b><br/>site photos"]
-    end
-
-    AI["🤖 <b>AI layer — Phase 6</b><br/>/api/ai/* → Anthropic<br/><i>designed, not implemented</i>"]
-
-    UI <-->|"forms · navigation"| PAGES
-    PAGES --> RBAC
-    ACTIONS --> RBAC
-    UI -->|"submit"| ACTIONS
-    ACTIONS -->|"rpc()"| RPC
-    PAGES -->|"select"| TABLES
-    CRON --> RPC
-    RPC --> TABLES
-    GUARD -.->|"enforce"| TABLES
-    ACTIONS --> STORE
-    PAGES -.->|"metrics in code"| AI
-    AI -.->|"advisory JSON only"| UI
-
-    classDef browser fill:#f1f5f9,stroke:#475569,color:#0f172a
-    classDef app fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    classDef db fill:#dcfce7,stroke:#15803d,color:#14532d
-    classDef ai fill:#fae8ff,stroke:#a21caf,stroke-dasharray:5 5,color:#701a75
-    class UI browser
-    class PAGES,ACTIONS,CRON,RBAC app
-    class RPC,TABLES,GUARD,STORE db
-    class AI ai
-```
+<sub>Source: [`diagrams/06-system-architecture.mmd`](diagrams/06-system-architecture.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 ### The one idea worth taking away
 
@@ -486,36 +319,9 @@ the button is hidden, and 17 database checks assert the function refuses.
 
 ## 10. Data model
 
-```mermaid
-erDiagram
-    DEPARTMENTS ||--o{ DESKS : "contains"
-    DEPARTMENTS ||--o{ PROFILES : "employs"
-    DEPARTMENTS ||--o{ STAGE_DEFINITIONS : "owns"
-    DESKS ||--o{ PROFILES : "seats"
+![Data model](diagrams/07-data-model.png)
 
-    DISTRICTS ||--o{ PROJECTS : "locates"
-    PROFILES ||--o{ PROJECTS : "creates"
-
-    PROJECTS ||--o{ STAGE_INSTANCES : "visits"
-    PROJECTS ||--o{ PROJECT_SLA_OVERRIDES : "tunes"
-    PROJECTS ||--o{ FILE_MOVEMENTS : "logs"
-    PROJECTS ||--o{ EXECUTION_CHECKLIST_ITEMS : "plans"
-    PROJECTS ||--o{ EXECUTION_REPORTS : "reports"
-    PROJECTS ||--o{ RA_BILLS : "bills"
-    PROJECTS ||--o{ EOT_REQUESTS : "extends"
-    PROJECTS ||--o| COMPLETION_REPORTS : "closes with"
-
-    STAGE_INSTANCES ||--o{ SUBTASKS : "parallelises"
-    STAGE_INSTANCES ||--o{ FILE_MOVEMENTS : "records"
-    STAGE_INSTANCES ||--o| ESCALATIONS : "breaches into"
-
-    ESCALATIONS ||--o{ JUSTIFICATIONS : "explained by"
-    ESCALATIONS ||--o| CHAT_THREADS : "discussed in"
-    ESCALATIONS ||--o| DECISIONS : "resolved by"
-    CHAT_THREADS ||--o{ CHAT_MESSAGES : "holds"
-
-    DESKS ||--o{ STAGE_INSTANCES : "holds"
-```
+<sub>Source: [`diagrams/07-data-model.mmd`](diagrams/07-data-model.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 **The table that carries the idea: `stage_instances`.** A project does not have nine rows,
 one per stage. It has a row for **every visit** to a stage. Return to Administrative
@@ -523,6 +329,12 @@ Approval and a second `ADMIN_APPROVAL` row appears with `attempt_no = 2`,
 `entered_via = RETURN`, and a fresh `due_at`. That single decision is what makes loops,
 re-entries and honest per-stage timing possible — and it is why the passport can show
 "2 attempts" instead of quietly overwriting the first one.
+
+### The execution and closure tables
+
+![Execution and closure tables](diagrams/09-execution-tables.png)
+
+<sub>Source: [`diagrams/09-execution-tables.mmd`](diagrams/09-execution-tables.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 **`file_movements` is the ledger.** Every receipt, forward, sub-task, approval, return,
 escalation and re-entry is one append-only row. It is the digital replacement for the
@@ -589,30 +401,9 @@ computed in code, and the model only explains and drafts.** Schedule variance, b
 probability, delay days — all arithmetic, all testable, all defensible. If a judge asks
 "how did you get 23 days?", the answer is a formula, not a prompt.
 
-```mermaid
-flowchart LR
-    DATA[("📊 Project data<br/>checklist · reports<br/>bills · EoT · escalations")]
-    METRICS["<b>/lib/ai/metrics.ts</b><br/>deterministic, unit-tested<br/>SPI · projected finish<br/>% SLA used · risk score"]
-    LLM["🤖 <b>Claude</b><br/>server-side only<br/>explains &amp; drafts<br/>strict JSON + Zod"]
-    PANEL["<b>UI panel</b><br/>'AI-generated · review before use'<br/>👍 👎"]
-    HUMAN["🧑‍💼 <b>Officer</b><br/>edits, then submits"]
-    LOG[("ai_outputs<br/><i>every output logged</i>")]
+![The AI layer as designed for Phase 6](diagrams/08-ai-layer.png)
 
-    DATA --> METRICS
-    METRICS -->|"numbers"| PANEL
-    METRICS -->|"numbers + remarks"| LLM
-    LLM -->|"summary · causes<br/>suggested actions"| PANEL
-    LLM --> LOG
-    PANEL --> HUMAN
-    HUMAN ==>|"the only path<br/>to a state change"| STATE["workflow state"]
-
-    classDef code fill:#dcfce7,stroke:#15803d,color:#14532d
-    classDef ai fill:#fae8ff,stroke:#a21caf,color:#701a75
-    classDef human fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
-    class METRICS code
-    class LLM,PANEL ai
-    class HUMAN,STATE human
-```
+<sub>Source: [`diagrams/08-ai-layer.mmd`](diagrams/08-ai-layer.mmd) — regenerate with `npm run docs:diagrams`</sub>
 
 ### The four features
 

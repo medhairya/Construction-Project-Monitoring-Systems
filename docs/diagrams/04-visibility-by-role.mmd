@@ -1,0 +1,49 @@
+flowchart LR
+    subgraph MIN["👔 MINISTRY (CMO)"]
+      direction TB
+      M1["every district,<br/>every project"]
+      M2["desk detail in<br/><b>all</b> departments"]
+      M3["<b>create</b> a project<br/>(Project ID generated)"]
+      M4["<b>decide</b> escalations"]
+      M1 ~~~ M2 ~~~ M3 ~~~ M4
+    end
+
+    subgraph HEAD["🧑‍💼 DEPARTMENT HEAD"]
+      direction TB
+      H1["desk detail in<br/><b>own</b> department"]
+      H2["<b>approve</b> / <b>return</b><br/>own stage only"]
+      H3["other departments:<br/>summary line only"]
+      H4["desk performance<br/>+ bottleneck"]
+      H1 ~~~ H2 ~~~ H3 ~~~ H4
+    end
+
+    subgraph OP["🧑‍💻 DEPARTMENT OPERATOR"]
+      direction TB
+      O1["forward between desks<br/>inside own department"]
+      O2["open / close<br/>sub-tasks"]
+      O3["❌ cannot approve"]
+      O4["❌ cannot forward<br/>to another department"]
+      O1 ~~~ O2 ~~~ O3 ~~~ O4
+    end
+
+    subgraph SITE["👷 SITE ENGINEER"]
+      direction TB
+      S1["<b>own projects only</b>"]
+      S2["reports · photos<br/>RA bills · EoT"]
+      S3["❌ no desk-level<br/>movement at all"]
+      S4["❌ cannot approve<br/>or forward"]
+      S1 ~~~ S2 ~~~ S3 ~~~ S4
+    end
+
+    MIN ~~~ HEAD ~~~ OP ~~~ SITE
+
+    classDef can fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef cannot fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+    classDef see fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    class M1,M2,H1,H3,H4,S1,S2 see
+    class M3,M4,H2,O1,O2 can
+    class O3,O4,S3,S4 cannot
+    style MIN fill:#f8fafc,stroke:#0369a1,stroke-width:2px
+    style HEAD fill:#f8fafc,stroke:#15803d,stroke-width:2px
+    style OP fill:#f8fafc,stroke:#a16207,stroke-width:2px
+    style SITE fill:#f8fafc,stroke:#a21caf,stroke-width:2px

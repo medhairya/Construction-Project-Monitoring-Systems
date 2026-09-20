@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    participant C as ⏰ Clock<br/>(sweep / now_app)
+    participant P as 📁 Project
+    participant O as 🧑‍💼 Holding officer
+    participant M as 👔 Ministry
+
+    C->>P: due_at has passed
+    Note over P: stage → BREACHED<br/>project → ESCALATED<br/>🔒 movement frozen
+    P-->>O: red banner + notification
+    P-->>M: appears in escalations
+
+    O->>M: Structured justification<br/>cause · explanation · impact · fix · new ETA
+    Note over O,M: all five fields required,<br/>Zod-validated, on permanent record
+
+    M->>O: Official chat — "exact date?"
+    O->>M: reply
+    Note over M,O: append-only · timestamped · role badge<br/>❌ cannot be edited or deleted
+
+    M->>P: Structured decision<br/>type · changes ordered · reason<br/>new SLA · re-entry stage · priority
+    Note over P: status → ACTIVE<br/>priority → <b>HIGH</b><br/>new stage instance, new clock
+    P-->>O: back at the top of the inbox

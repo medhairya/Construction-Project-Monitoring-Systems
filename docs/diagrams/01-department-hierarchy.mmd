@@ -1,0 +1,29 @@
+flowchart TD
+    CMO["🏛️ <b>MINISTRY (CMO)</b><br/>Code: MIN<br/><i>Creates projects · decides escalations</i>"]
+
+    CMO --> FIN["💰 <b>FINANCE DEPARTMENT</b><br/>Code: FIN<br/><i>Stage 2 · Stage 8</i>"]
+    CMO --> RB["🏗️ <b>ROADS &amp; BUILDINGS (PWD)</b><br/>Code: RB<br/><i>Stage 3 · 5 · 7 · 9</i>"]
+    CMO --> TND["📋 <b>TENDER CELL</b><br/>Code: TND<br/><i>Stage 4</i>"]
+    CMO --> SITE["👷 <b>SITE EXECUTION WING</b><br/>Code: SITE<br/><i>Stage 6</i>"]
+
+    FIN --> FINH["Secretary (Finance)<br/><b>Department Head</b><br/>approves / returns"]
+    FIN --> FINO["Section Officer<br/><b>Operator</b><br/>forwards between desks"]
+
+    RB --> RBH["Chief Engineer<br/><b>Department Head</b>"]
+    RB --> RBO["Deputy Engineer<br/><b>Operator</b>"]
+
+    TND --> TNDH["Tender Officer<br/><b>Department Head</b>"]
+
+    SITE --> SITEH["EE (Site Wing)<br/><b>Department Head</b><br/>approves EoT, verifies bills"]
+    SITE --> SITEE["Site Engineer<br/><b>Field</b><br/>reports, photos, bills"]
+
+    ADMIN["⚙️ <b>SUPER ADMIN</b><br/>No department<br/><i>users · SLA defaults · demo clock</i>"]
+
+    classDef ministry fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e
+    classDef dept fill:#f1f5f9,stroke:#475569,stroke-width:2px,color:#0f172a
+    classDef person fill:#ffffff,stroke:#94a3b8,color:#334155
+    classDef admin fill:#fef3c7,stroke:#b45309,color:#78350f
+    class CMO ministry
+    class FIN,RB,TND,SITE dept
+    class FINH,FINO,RBH,RBO,TNDH,SITEH,SITEE person
+    class ADMIN admin

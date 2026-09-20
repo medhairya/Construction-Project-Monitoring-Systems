@@ -1,0 +1,25 @@
+flowchart LR
+    subgraph FIN["💰 FINANCE DEPARTMENT — the file's path inside"]
+      direction LR
+      A["📥 <b>Section Officer</b><br/>K. Patel<br/><i>receives the file</i>"]
+      B["<b>Accounts Officer</b><br/>S. Desai<br/><i>checks funds</i>"]
+      C["<b>Planning Officer</b><br/>M. Joshi<br/><i>parallel sub-task</i>"]
+      D["<b>Deputy Secretary</b><br/>P. Shah<br/><i>scrutiny</i>"]
+      E["✅ <b>Secretary (Finance)</b><br/>V. Trivedi<br/><b>only desk that can approve</b>"]
+
+      A -->|forward| B
+      B -->|forward| D
+      B -.->|"sub-task<br/>opened"| C
+      C -.->|"sub-task<br/>closed"| D
+      D -->|forward| E
+      E ==>|"APPROVE →<br/>Stage 3"| OUT(["file leaves<br/>the department"])
+    end
+
+    classDef entry fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef desk fill:#ffffff,stroke:#94a3b8,color:#334155
+    classDef head fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#14532d
+    classDef out fill:#f1f5f9,stroke:#64748b,color:#334155
+    class A entry
+    class B,C,D desk
+    class E head
+    class OUT out

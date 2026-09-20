@@ -1,0 +1,44 @@
+flowchart TB
+    subgraph BROWSER["🖥️ Browser"]
+      UI["React Server Components<br/>+ small client islands<br/><i>Tailwind · shadcn-style primitives · Recharts</i>"]
+    end
+
+    subgraph VERCEL["▲ Vercel — Next.js 16 App Router"]
+      direction TB
+      PAGES["<b>Pages</b> (server)<br/>passport · inbox · escalations<br/>execution · dashboards · admin"]
+      ACTIONS["<b>Server Actions</b><br/>Zod-validated, one per RPC"]
+      CRON["<b>/api/cron/sla</b><br/>secret-protected sweep"]
+      RBAC["<b>/lib/rbac</b> — visibility matrix<br/><b>/lib/workflow</b> — rules R1–R5 (pure)<br/><b>/lib/sla</b> · <b>/lib/execution</b> — maths"]
+    end
+
+    subgraph SUPA["🐘 Supabase"]
+      direction TB
+      RPC["<b>PL/pgSQL functions</b><br/>fn_create_project · fn_approve_stage<br/>fn_return_stage · fn_forward_file<br/>fn_sla_sweep · fn_record_decision<br/><i>the rules, again, in the database</i>"]
+      TABLES[("<b>Postgres tables</b><br/>projects · stage_instances<br/>file_movements · escalations<br/>chat · decisions · execution")]
+      GUARD["<b>Guards</b><br/>RLS policies<br/>append-only triggers (R8)<br/>now_app() demo clock"]
+      STORE["<b>Storage</b><br/>site photos"]
+    end
+
+    AI["🤖 <b>AI layer — Phase 6</b><br/>/api/ai/* → Anthropic<br/><i>designed, not implemented</i>"]
+
+    UI <-->|"forms · navigation"| PAGES
+    PAGES --> RBAC
+    ACTIONS --> RBAC
+    UI -->|"submit"| ACTIONS
+    ACTIONS -->|"rpc()"| RPC
+    PAGES -->|"select"| TABLES
+    CRON --> RPC
+    RPC --> TABLES
+    GUARD -.->|"enforce"| TABLES
+    ACTIONS --> STORE
+    PAGES -.->|"metrics in code"| AI
+    AI -.->|"advisory JSON only"| UI
+
+    classDef browser fill:#f1f5f9,stroke:#475569,color:#0f172a
+    classDef app fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef db fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef ai fill:#fae8ff,stroke:#a21caf,stroke-dasharray:5 5,color:#701a75
+    class UI browser
+    class PAGES,ACTIONS,CRON,RBAC app
+    class RPC,TABLES,GUARD,STORE db
+    class AI ai

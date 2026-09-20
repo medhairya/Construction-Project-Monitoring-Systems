@@ -1,0 +1,28 @@
+erDiagram
+    PROJECTS ||--o{ EXECUTION_CHECKLIST_ITEMS : "planned at Work Order approval"
+    PROJECTS ||--o{ EXECUTION_REPORTS : "site reports with photos"
+    PROJECTS ||--o{ RA_BILLS : "running account bills"
+    PROJECTS ||--o{ EOT_REQUESTS : "extensions of time"
+    PROJECTS ||--o| COMPLETION_REPORTS : "signed at Stage 7"
+
+    EXECUTION_CHECKLIST_ITEMS {
+        int weight_pct "5 items summing to 100"
+        date planned_start "spread across the stage SLA"
+        int actual_pct "driven by the site reports"
+    }
+    EXECUTION_REPORTS {
+        enum report_type "DAILY WEEKLY MONTHLY"
+        int progress_pct "updates the checklist"
+        text_array photo_paths "site evidence"
+    }
+    RA_BILLS {
+        text status "SUBMITTED then VERIFIED then PAID"
+    }
+    EOT_REQUESTS {
+        int days_requested "approval extends the live due date"
+        text status "PENDING APPROVED REJECTED"
+    }
+    COMPLETION_REPORTS {
+        int delay_days "computed from the project history"
+        text delay_reasons "overruns escalations extensions"
+    }

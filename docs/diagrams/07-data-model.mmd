@@ -1,0 +1,41 @@
+erDiagram
+    DEPARTMENTS ||--o{ DESKS : "contains"
+    DEPARTMENTS ||--o{ PROFILES : "employs"
+    DEPARTMENTS ||--o{ STAGE_DEFINITIONS : "owns stages"
+    DESKS ||--o{ PROFILES : "seats"
+    DISTRICTS ||--o{ PROJECTS : "locates"
+
+    PROJECTS ||--o{ STAGE_INSTANCES : "one row per VISIT"
+    PROJECTS ||--o{ PROJECT_SLA_OVERRIDES : "tunes"
+    PROJECTS ||--o{ FILE_MOVEMENTS : "append-only ledger"
+
+    STAGE_INSTANCES ||--o{ SUBTASKS : "parallel work (R2)"
+    STAGE_INSTANCES ||--o| ESCALATIONS : "breaches into"
+    DESKS ||--o{ STAGE_INSTANCES : "currently holds"
+
+    ESCALATIONS ||--o{ JUSTIFICATIONS : "explained by"
+    ESCALATIONS ||--o| CHAT_THREADS : "discussed in"
+    ESCALATIONS ||--o| DECISIONS : "resolved by"
+    CHAT_THREADS ||--o{ CHAT_MESSAGES : "holds"
+
+    PROJECTS {
+        text project_code "GJ-RB-2026-AHD-0042 (R5)"
+        enum status "ACTIVE ESCALATED COMPLETED"
+        enum priority "NORMAL or HIGH after a decision"
+        enum current_stage_key "exactly one (R1)"
+    }
+    STAGE_INSTANCES {
+        int attempt_no "2nd visit after a return"
+        enum entered_via "FORWARD RETURN REENTRY"
+        timestamptz due_at "started_at + sla_days"
+        uuid holder_desk_id "which desk has it now"
+    }
+    FILE_MOVEMENTS {
+        enum action "RECEIVED FORWARDED APPROVED RETURNED"
+        text remark "never updated or deleted (R8)"
+    }
+    DECISIONS {
+        enum decision_type "ORDER_CHANGES RETURN_TO_STAGE"
+        int new_sla_days "the Ministry sets the new clock"
+        enum reentry_stage_key "where the file rejoins"
+    }

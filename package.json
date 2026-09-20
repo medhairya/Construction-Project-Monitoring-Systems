@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "db:seed:remote": "node scripts/supabase-seed.mjs",
     "db:push": "node scripts/db-migrate.mjs",
-    "docs:diagram": "node scripts/make-excalidraw.mjs"
+    "docs:diagram": "node scripts/make-excalidraw.mjs",
+    "docs:diagrams": "node scripts/make-diagrams.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

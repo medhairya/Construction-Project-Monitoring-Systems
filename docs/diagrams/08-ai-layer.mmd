@@ -1,0 +1,22 @@
+flowchart LR
+    DATA[("📊 Project data<br/>checklist · reports<br/>bills · EoT · escalations")]
+    METRICS["<b>/lib/ai/metrics.ts</b><br/>deterministic, unit-tested<br/>SPI · projected finish<br/>% SLA used · risk score"]
+    LLM["🤖 <b>Claude</b><br/>server-side only<br/>explains &amp; drafts<br/>strict JSON + Zod"]
+    PANEL["<b>UI panel</b><br/>'AI-generated · review before use'<br/>👍 👎"]
+    HUMAN["🧑‍💼 <b>Officer</b><br/>edits, then submits"]
+    LOG[("ai_outputs<br/><i>every output logged</i>")]
+
+    DATA --> METRICS
+    METRICS -->|"numbers"| PANEL
+    METRICS -->|"numbers + remarks"| LLM
+    LLM -->|"summary · causes<br/>suggested actions"| PANEL
+    LLM --> LOG
+    PANEL --> HUMAN
+    HUMAN ==>|"the only path<br/>to a state change"| STATE["workflow state"]
+
+    classDef code fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef ai fill:#fae8ff,stroke:#a21caf,color:#701a75
+    classDef human fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    class METRICS code
+    class LLM,PANEL ai
+    class HUMAN,STATE human

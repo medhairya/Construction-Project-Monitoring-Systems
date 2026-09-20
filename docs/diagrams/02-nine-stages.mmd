@@ -1,0 +1,40 @@
+flowchart TB
+    subgraph TOP[" "]
+      direction LR
+      S1["<b>1 · Ministry Proposal</b><br/>Ministry (MIN)<br/>15 days<br/><i>Project ID generated</i>"]
+      S2["<b>2 · Administrative Approval</b><br/>+ Fund Allotment<br/>Finance (FIN)<br/>21 days"]
+      S3["<b>3 · Technical Sanction</b><br/>Roads &amp; Buildings (RB)<br/>21 days"]
+      S4["<b>4 · Tender</b><br/>nProcure<br/>Tender Cell (TND)<br/>45 days"]
+      S5["<b>5 · Work Order</b><br/>Roads &amp; Buildings (RB)<br/>7 days"]
+      S1 --> S2 --> S3 --> S4 --> S5 --> CONT(["work begins ⤵"])
+    end
+
+    subgraph BOTTOM[" "]
+      direction LR
+      START(["⤷ continued"])
+      S6["<b>6 · Site Execution</b><br/>Site Execution Wing<br/>180 days<br/><i>checklist · reports · bills</i>"]
+      S7["<b>7 · Completion Report</b><br/>Roads &amp; Buildings (RB)<br/>15 days"]
+      S8["<b>8 · Final Bill</b><br/>Finance (FIN)<br/>30 days"]
+      S9["<b>9 · DLP &amp; Closure</b><br/>Roads &amp; Buildings (RB)<br/>365 days"]
+      DONE(["✅ <b>Project closed</b>"])
+      START --> S6 --> S7 --> S8 --> S9 --> DONE
+    end
+
+    TOP ~~~ BOTTOM
+    S3 -.->|"<b>RETURN</b><br/>(R4)"| S2
+
+    classDef min fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e
+    classDef fin fill:#fef9c3,stroke:#a16207,stroke-width:2px,color:#713f12
+    classDef rb fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#14532d
+    classDef tnd fill:#ffe4e6,stroke:#be123c,stroke-width:2px,color:#881337
+    classDef site fill:#f5d0fe,stroke:#a21caf,stroke-width:2px,color:#701a75
+    classDef done fill:#ffffff,stroke:#15803d,stroke-width:2px,color:#14532d
+    class S1 min
+    class S2,S8 fin
+    class S3,S5,S7,S9 rb
+    class S4 tnd
+    class S6 site
+    class DONE done
+    class CONT,START done
+    style TOP fill:#ffffff,stroke:#ffffff
+    style BOTTOM fill:#ffffff,stroke:#ffffff
