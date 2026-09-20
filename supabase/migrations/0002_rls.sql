@@ -1,6 +1,18 @@
 -- RLS — Section 4.4. Mirrors src/lib/rbac/index.ts.
 -- All workflow writes go through the SECURITY DEFINER functions in 0003, so
 -- direct insert/update is revoked on the workflow tables.
+--
+-- How this is reached today: the app holds its own demo cookie session and
+-- talks to Postgres with the secret key from the server, which bypasses RLS.
+-- The rules that actually gate a request are therefore the ones in
+-- src/lib/rbac and the guards inside the 0003 functions. These policies still
+-- matter for two reasons:
+--   1. They deny everything to the anon/publishable key, so the key that ships
+--      to the browser can read nothing at all.
+--   2. They are the enforcement path the moment real Supabase Auth is turned
+--      on, with no rewrite needed.
+-- The auth.uid() below is null under the demo session, which is what makes (1)
+-- true: no row matches, so nothing is readable without the secret key.
 
 create or replace function my_role() returns role_type
 language sql stable security definer set search_path = public as $$
