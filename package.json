@@ -12,7 +12,8 @@
     "db:reset": "node scripts/db-reset.mjs",
     "test:e2e": "playwright test",
     "db:seed:remote": "node scripts/supabase-seed.mjs",
-    "db:push": "node scripts/db-migrate.mjs"
+    "db:push": "node scripts/db-migrate.mjs",
+    "docs:diagram": "node scripts/make-excalidraw.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -4,6 +4,14 @@ A department head types a **Project ID** and immediately sees where the file is,
 holding it, for how long, and why it is late. Built against `docs/DEVELOPMENT_PLAN.md`;
 Phases 0–5 are implemented; Phase 6 (the AI layer) is not started.
 
+## Documentation
+
+| Document | What it is |
+|---|---|
+| **[docs/SYSTEM_DESIGN.md](docs/SYSTEM_DESIGN.md)** | The full picture: the problem, department and desk hierarchies, the nine stages, what each role sees in the first person, every feature and why it was chosen, architecture and data model, the AI layer design, demo credentials and the demo script. Diagrams render on GitHub. |
+| [docs/architecture.excalidraw](docs/architecture.excalidraw) | The architecture as an editable Excalidraw drawing — open at [excalidraw.com](https://excalidraw.com) → File → Open. Regenerate with `npm run docs:diagram`. |
+| [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) | The original phase-by-phase plan this was built against. |
+
 ## Run it
 
 ```bash
