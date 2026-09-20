@@ -47,6 +47,21 @@ if (!fs.existsSync(dataFile)) {
 }
 
 const db = JSON.parse(fs.readFileSync(dataFile, "utf8"));
+
+// The local file is written by a running dev server that caches the database
+// in memory. If a test run or a demo left the clock shifted, every SLA in the
+// upload would be wrong, so refuse rather than seed a skewed dataset.
+const offsetDays = db.system_clock.offset_minutes / 1440;
+if (offsetDays !== 0 && !process.argv.includes("--allow-shifted-clock")) {
+  console.error(
+    [
+      "The local demo clock is " + offsetDays + " days ahead, so this data is skewed.",
+      "Stop the dev server, delete .data, start it again and load one page, then retry.",
+      "Pass --allow-shifted-clock to seed anyway.",
+    ].join(" "),
+  );
+  process.exit(1);
+}
 const supabase = createClient(url, key, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
@@ -60,32 +75,15 @@ const uuid = (localId) => {
 };
 
 async function wipe() {
-  // Reverse FK order.
-  const tables = [
-    "ai_outputs",
-    "completion_reports",
-    "eot_requests",
-    "ra_bills",
-    "execution_reports",
-    "execution_checklist_items",
-    "decisions",
-    "chat_messages",
-    "chat_threads",
-    "justifications",
-    "escalations",
-    "file_movements",
-    "subtasks",
-    "project_sla_overrides",
-  ];
-  for (const t of tables) await supabase.from(t).delete().neq("id", crypto.randomUUID());
-  await supabase.from("projects").update({ current_stage_instance_id: null }).neq("id", crypto.randomUUID());
-  await supabase.from("stage_instances").delete().neq("id", crypto.randomUUID());
-  await supabase.from("projects").delete().neq("id", crypto.randomUUID());
-  await supabase.from("stage_definitions").delete().neq("seq", 0);
-  await supabase.from("profiles").delete().neq("id", crypto.randomUUID());
-  await supabase.from("desks").delete().neq("id", crypto.randomUUID());
-  await supabase.from("departments").delete().neq("id", crypto.randomUUID());
-  await supabase.from("districts").delete().neq("id", crypto.randomUUID());
+  // fn_reset_data truncates, which is the only way past the R8 append-only
+  // triggers - and deliberately so: rebuilding the demo is allowed, editing a
+  // single audit row is not.
+  const { error } = await supabase.rpc("fn_reset_data", { p_keep_reference: false });
+  if (error) {
+    console.error("Could not reset the data: " + error.message);
+    console.error("Have the migrations been applied? Run `npm run db:push` first.");
+    process.exit(1);
+  }
 }
 
 async function insert(table, rows) {

@@ -7,6 +7,10 @@
 -- JWT to read. The checks are identical either way; only the source of the
 -- actor differs. When real Supabase Auth is introduced, pass auth.uid() as
 -- p_actor and the bodies need no change.
+--
+-- Every statement here is CREATE OR REPLACE, so this file is safe to re-apply:
+-- it is the single source of truth for the functions rather than a one-way
+-- migration. `npm run db:push -- --redo 0003_functions.sql` reapplies it.
 
 create or replace function fn_role_of(p_actor uuid) returns role_type
 language sql stable security definer set search_path = public as $$
@@ -69,7 +73,8 @@ begin
 
   insert into file_movements (project_id, stage_instance_id, action, to_desk_id, actor_id, remark)
   values (p_project, v_instance,
-          case when p_via = 'REENTRY' then 'REENTERED' else 'RECEIVED' end,
+          -- The CASE has to be cast: its branches are text, the column is an enum.
+          (case when p_via = 'REENTRY' then 'REENTERED' else 'RECEIVED' end)::movement_action,
           v_desk, p_actor, p_remark);
 
   -- Phase 4 task 1: the checklist template, spread across the stage SLA.
