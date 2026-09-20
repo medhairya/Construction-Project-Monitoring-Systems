@@ -11,6 +11,11 @@ import { NotificationBell } from "@/components/notifications";
 import { NAV_FOR_ROLE } from "@/components/nav-items";
 import type { Notification } from "@/lib/db/analytics";
 
+export interface SwitcherAccount extends Profile {
+  /** Department name, so the switcher says which desk you are moving to. */
+  departmentName: string;
+}
+
 export function Topbar({
   user,
   accounts,
@@ -19,7 +24,7 @@ export function Topbar({
   notifications,
 }: {
   user: Profile;
-  accounts: Profile[];
+  accounts: SwitcherAccount[];
   clockOffsetDays: number;
   appDate: string;
   notifications: Notification[];
@@ -27,6 +32,7 @@ export function Topbar({
   const [pending, start] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
   const navItems = NAV_FOR_ROLE(user.role);
+  const currentDept = accounts.find((a) => a.id === user.id)?.departmentName ?? null;
 
   return (
     <header className="border-b border-slate-200 bg-white">
@@ -64,11 +70,11 @@ export function Topbar({
               disabled={pending}
               value={user.id}
               onChange={(e) => start(() => void switchUserAction(e.target.value))}
-              className="max-w-[10rem] rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-800 sm:max-w-none"
+              className="max-w-[11rem] rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-800 sm:max-w-none"
             >
               {accounts.map((a) => (
                 <option key={a.id} value={a.id}>
-                  {a.full_name} — {ROLE_LABEL[a.role]}
+                  {a.departmentName} — {ROLE_LABEL[a.role]} ({a.full_name})
                 </option>
               ))}
             </select>
@@ -81,7 +87,10 @@ export function Topbar({
 
           <div className="hidden text-right lg:block">
             <p className="text-xs font-semibold text-slate-800">{user.full_name}</p>
-            <p className="text-[11px] text-slate-600">{ROLE_LABEL[user.role]}</p>
+            <p className="text-[11px] text-slate-600">
+              {ROLE_LABEL[user.role]}
+              {currentDept ? " · " + currentDept : ""}
+            </p>
           </div>
 
           <Button

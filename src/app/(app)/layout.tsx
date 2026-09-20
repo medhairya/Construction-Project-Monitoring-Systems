@@ -17,7 +17,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
           user={user}
-          accounts={demoAccounts()}
+          accounts={demoAccounts().map((a) => ({
+            ...a,
+            departmentName:
+              db.departments.find((d) => d.id === a.department_id)?.name ?? "No department",
+          }))}
           clockOffsetDays={Math.round(db.system_clock.offset_minutes / (60 * 24))}
           appDate={formatDate(nowApp())}
           notifications={notificationsFor(user)}
